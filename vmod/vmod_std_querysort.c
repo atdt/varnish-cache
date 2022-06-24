@@ -44,10 +44,21 @@ compa(const void *a, const void *b)
 	const char * const *pb = b;
 	const char *a1, *b1;
 
-	for (a1 = pa[0], b1 = pb[0]; a1 < pa[1] && b1 < pb[1]; a1++, b1++)
-		if (*a1 != *b1)
+	for (a1 = pa[0], b1 = pb[0]; a1 < pa[1] && b1 < pb[1]; a1++, b1++) {
+		if (*a1 == '=') {
+			if (*b1 == '=') {
+				break;
+			} else {
+				return -1;
+			}
+		} else if (*b1 == '=') {
+			return 1;
+		} else if (*a1 != *b1) {
 			return (*a1 - *b1);
-	return (0);
+		}
+	}
+	// Keys are identical, so compare by address to preserve order.
+	return pa[0] - pb[0];
 }
 
 VCL_STRING v_matchproto_(td_std_querysort)
